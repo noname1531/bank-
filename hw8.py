@@ -1,10 +1,15 @@
 import sqlite3
 
-connect = sqlite3.connect("bank.db")
+connect = sqlite3.connect("optima_bank.db")
 cursor = connect.cursor()
 
-cursor.execute("""CREATE TABLE IF NOT EXISTS customs(id INTEGER PRIMARY KEY, name VARCHAR(100) NOT NULL, surname VARCHAR(100) NOT NULL,  
-               age INTEGER NOT NULL, email TEXT, balance DOUBLE (8, 2), is_active BOOLEAN DEFAULT FALSE);""")
+cursor.execute("""CREATE TABLE IF NOT EXISTS customs(
+               id INTEGER PRIMARY KEY,
+               name VARCHAR(100) NOT NULL,
+               surname VARCHAR(100) NOT NULL,  
+               age INTEGER NOT NULL,
+               email TEXT, balance DOUBLE (8, 2),
+               is_active BOOLEAN DEFAULT FALSE);""")
 
 class Bank:
     def __init__(self):
@@ -25,51 +30,51 @@ class Bank:
                         VALUES('{name}', '{surname}','{age}','{email}', 0, True);""")
         connect.commit()
 
-    def deposit(self, amount):
-        cursor.execute(f"""UPDATE customs SET balance = balance + {amount} WHERE email = '{self.email}'""")
+    def plus(self, pl):
+        cursor.execute(f"""UPDATE customs SET balance = balance + {pl} WHERE email = '{self.email}'""")
         connect.commit()
-        self.balance += amount
+        self.balance += pl
 
-    def minus(self, amount):
-        cursor.execute(f"""UPDATE customs SET balance = balance - {amount} WHERE email = '{self.email}'""")
+    def minus(self, min):
+        cursor.execute(f"""UPDATE customs SET balance = balance - {min} WHERE email = '{self.email}'""")
         connect.commit()
-        self.balance -= amount
+        self.balance -= min
 
     def main(self):
         while True:
-            print("1 = регистрация, 2 = пополнение, 3 = вывесьт денги, 4 = выйти")
+            print("1 = войти, 2 = пополнение, 3 = вывесьт денги, 4 = выйти")
             command = int(input("Выберите дествие: "))
             if command == 1:
-                print('РЕГИСТРАЦИЯ')
+                
                 name = input("Введите имя: ")
                 surname = input("Введите фамилию: ")
                 age = int(input("Введите возраст: "))
                 email = input("Введите email: ")
                 self.register(name, surname, age, email)
-                print(f"Вы успешно зарегистрировались! Ваш email: {email}")
+                print(f"Вы успешно вошли! Ваш email: {email}")
 
             elif command == 2:
                 if self.email:
-                    print('ПОПОЛНЕНИЕ')
-                    amount = int(input("Введите сумму: "))
-                    self.deposit(amount)
-                    print(f"Вы успешно пополнили сумму: {amount}")
+                    
+                    pl = int(input("Введите сумму: "))
+                    self.plus(pl)
+                    print(f"Вы успешно пополнили сумму: {pl}")
                 else:
-                    print("Пройдите регистрацию")
+                    print("Попробуйте заново")
 
             elif command == 3:
                 if self.email:
-                    print('ВЫВЕСТ ДЕНГИ')
-                    amount = int(input('Введите суму для снятия: '))
-                    self.minus(amount)
-                    print(f"Вы успешно сняли сумму: {amount}")
+                    
+                    min = int(input('Введите суму для снятия: '))
+                    self.minus(min)
+                    print(f"Вы успешно сняли сумму: {min}")
                 else:
-                    print("Пройдите регистрацию")
+                    print("Попробуйте заново")
             elif command == 4:
                 break
 
             else:
-                 print("1 = регистрация, 2 = пополнение, 3 = вывесьт денги, 4 = выйти")
+                 print("1 = войти, 2 = пополнение, 3 = вывесьт денги, 4 = выйти")
                  command = int(input("Выберите дествие: "))
 
 
